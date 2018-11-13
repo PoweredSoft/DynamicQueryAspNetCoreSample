@@ -1,4 +1,4 @@
-# DynamicQueryAspNetCoreSample
+# Sample for Dynamic Query with ASP .NET CORE and EF Core
 
 You will need NPM & Node, since this project is angular spa for the front end.
 
