@@ -20,6 +20,7 @@ namespace AcmeWeb
             typeof(ICompositeFilter),
             typeof(IAggregate),
             typeof(ISort),
+            typeof(IGroup),
             typeof(IQueryCriteria),
             typeof(IQueryHandler)
         };
