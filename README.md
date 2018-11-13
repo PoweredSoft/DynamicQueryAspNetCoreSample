@@ -1,7 +1,22 @@
 # Sample for Dynamic Query with ASP .NET CORE and EF Core
 
-You will need NPM & Node, since this project is angular spa for the front end.
+First Install Angular CLI Use the starting guide of https://cli.angular.io/
 
-Install angular cli globally, preferable.
+```
+npm install -g @angular/cli
+```
 
-Then you should be able to run this sample without any issues :)
+Sadly visual studio does not yet allow to run npm install on a seperate folder, so start a command line in the folder spa, and run:
+
+```
+cd spa
+npm i
+```
+
+Run ng build once to see if there is no errors in the folder spa
+```
+cd spa
+ng build
+```
+
+if its all good you can start build + run the project and it should show the sample.
