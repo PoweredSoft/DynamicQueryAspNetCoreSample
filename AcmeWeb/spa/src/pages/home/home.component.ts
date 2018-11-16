@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges, DoCheck, KeyValueDiffers, KeyValueDiffer } from "@angular/core";
+import { Component, OnChanges, SimpleChanges, DoCheck, KeyValueDiffers, KeyValueDiffer, PACKAGE_ROOT_URL } from "@angular/core";
 import { DynamicQueryService } from "src/dynamic-query/dynamic-query.service";
 import { IQueryCriteria, ISort, IGroup, IAggregate, IFilter, ISimpleFilter } from "src/dynamic-query/models";
 import { Subject } from "rxjs";
@@ -19,8 +19,8 @@ export class HomeComponent
         page: 1
     };
 
-    route: string = 'api/orders';
-    routes: string[] = ['api/orders', 'api/order-items', 'api/items', 'api/customers'];
+    route: string = 'api/tickets';
+    routes: string[] = ['api/orders', 'api/order-items', 'api/items', 'api/customers', 'api/tickets', 'api/tasks'];
     lastResult: any;
 
     filterTypes: string[] = [
@@ -86,5 +86,71 @@ export class HomeComponent
                 res => this.lastResult = res,
                 err => this.lastResult = err
             );
+  }
+
+  filteringSample() {
+    if (this.route == 'api/tickets') {
+      this.criteria = {
+        page: 1,
+        pageSize: 20,
+        aggregates: [],
+        filters: [
+          <ISimpleFilter>{
+            type: 'Equal',
+            value: 'critical',
+            path: 'priority'
+          },
+          <ISimpleFilter>{
+            type: 'Equal',
+            value: 'refused',
+            path: 'ticketType',
+            and: true
+          },
+        ],
+        groups: [],
+        sorts: []
+      }
     }
+
+    this.go();
+  }
+
+  groupingSample() {
+    if (this.route == 'api/tickets') {
+      this.criteria = {
+        aggregates: [
+          { type: "Count" },
+          { type: "Avg", path: "actualDuration" },
+          { type: "Avg", path: "estimatedDuration" }
+        ],
+        filters: [],
+        groups: [{
+            path: 'ticketType'
+        }],
+        sorts: []
+      }
+    }
+
+    this.go();
+  }
+
+  aggregateSample() {
+
+    if (this.route == 'api/tickets') {
+      this.criteria = {
+        page: 1,
+        pageSize: 10,
+        aggregates: [
+          { type: "Count" },
+          { type: "Avg", path: "actualDuration" },
+          { type: "Avg", path: "estimatedDuration" }
+        ],
+        filters: [],
+        groups: [],
+        sorts: []
+      }
+    }
+
+    this.go();
+  }
 }

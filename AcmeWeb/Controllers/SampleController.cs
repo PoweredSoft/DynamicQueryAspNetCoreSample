@@ -42,5 +42,22 @@ namespace AcmeWeb.Controllers
         {
             return Ok(handler.Execute(context.Customers, criteria));
         }
+
+        [Route("api/tickets"), HttpGet, HttpPost]
+        public IActionResult GetTickets([FromServices]AcmeContext context,
+            [FromServices]IQueryHandler handler,
+            [FromBody]IQueryCriteria criteria)
+        {
+            return Ok(handler.Execute(context.Tickets, criteria));
+        }
+
+        [Route("api/tasks"), HttpGet, HttpPost]
+        public IActionResult GetTasks([FromServices]AcmeContext context,
+            [FromServices]IQueryHandler handler,
+            [FromBody]IQueryCriteria criteria)
+        {
+            return Ok(handler.Execute(context.Tasks, criteria));
+        }
+
     }
 }

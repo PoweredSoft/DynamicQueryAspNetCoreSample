@@ -48,12 +48,75 @@ namespace AcmeWeb.Dal
         public virtual Order Order { get; set; }
     }
 
+    public class Ticket
+    {
+        public int TicketId { get; set; }
+        public string TicketType { get; set; }
+        public string Title { get; set; }
+        public string Details { get; set; }
+        public bool IsHtml { get; set; }
+        public string TagList { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public string Owner { get; set; }
+        public string AssignedTo { get; set; }
+        public int TicketStatus { get; set; }
+        public DateTimeOffset CurrentStatusDate { get; set; }
+        public string CurrentStatusSetBy { get; set; }
+        public string LastUpdateBy { get; set; }
+        public DateTimeOffset LastUpdateDate { get; set; }
+        public string Priority { get; set; }
+        public bool AffectedCustomer { get; set; }
+        public string Version { get; set; }
+        public int ProjectId { get; set; }
+        public DateTimeOffset DueDate { get; set; }
+        public decimal EstimatedDuration { get; set; }
+        public decimal ActualDuration { get; set; }
+        public DateTimeOffset TargetDate { get; set; }
+        public DateTimeOffset ResolutionDate { get; set; }
+        public int Type { get; set; }
+        public int ParentId { get; set; }
+        public string PreferredLanguage { get; set; }
+    }
+
+    public class Task
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int OrderNumber { get; set; }
+        public int AssignedLogId { get; set; }
+        public int IsAssigned { get; set; }
+        public int OTSTaskTypeId { get; set; }
+        public string Comment { get; set; }
+        public DateTime LogComplete { get; set; }
+        public bool IsLogComplete { get; set; }
+        public bool ActualComplete { get; set; }
+        public DateTime PlannedStartDate { get; set; }
+        public DateTime PlannedCompleteStartDate { get; set; }
+        public bool IsComplete { get; set; }
+        public bool Unplanned { get; set; }
+        public int UnplannedCodeId { get; set; }
+        public string UnplannedComments { get; set; }
+        public bool IsImport { get; set; }
+        public bool IsArchived { get; set; }
+        public int OTSProjectId { get; set; }
+        public int BarrierTypeId { get; set; }
+        public bool IsBarrier { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime LastModifiedDate { get; set; }
+        public string LastModifiedBy { get; set; }
+    }
+
     public class AcmeContext : DbContext
     {
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderItem> OrderItems { get; set; }
+        public virtual DbSet<Ticket> Tickets { get; set; }
+        public virtual DbSet<Task> Tasks { get; set; }
 
         public AcmeContext()
         {
@@ -144,6 +207,92 @@ namespace AcmeWeb.Dal
                   new OrderItem() { Id = 15, OrderId = 4, ItemId = 3, PriceAtTheTime = 75.50M, Quantity = 1 }
               );
 
+            SaveChanges();
+
+            SeedFakeTickets();
+            SeedFakeTasks();
+        }
+
+        private void SeedFakeTasks()
+        {
+            var faker = new Bogus.Faker<Task>()
+                    .RuleFor(t => t.Name, (f, u) => f.Lorem.Sentence())
+                    .RuleFor(t => t.OrderNumber, (f, u) => f.Random.Number(10000000))
+                    .RuleFor(t => t.AssignedLogId, (f, u) => f.Random.Number(10000000))
+                    .RuleFor(t => t.IsAssigned, (f, u) => f.PickRandom(0, 1))
+                    .RuleFor(t => t.OTSTaskTypeId, (f, u) => f.PickRandom(1, 2, 3, 4))
+                    .RuleFor(t => t.Comment, (f) => f.Lorem.Paragraph())
+                    .RuleFor(t => t.LogComplete, f => f.Date.Soon(5))
+                    .RuleFor(t => t.IsLogComplete, f => f.PickRandom(true, false))
+                    .RuleFor(t => t.ActualComplete, f => f.PickRandom(true, false))
+                    .RuleFor(t => t.PlannedStartDate, f => f.Date.Soon(5))
+                    .RuleFor(t => t.PlannedCompleteStartDate, f => f.Date.Soon(5))
+                    .RuleFor(t => t.IsComplete, f => f.PickRandom(true, false))
+                    .RuleFor(t => t.Unplanned, f => f.PickRandom(true, false))
+                    .RuleFor(t => t.UnplannedCodeId, f => f.Random.Number(10000000))
+                    .RuleFor(t => t.UnplannedComments, f => f.Lorem.Paragraph())
+                    .RuleFor(t => t.IsImport, f => f.PickRandom(true, false))
+                    .RuleFor(t => t.IsArchived, f => f.PickRandom(true, false))
+                    .RuleFor(t => t.OTSProjectId, f => f.Random.Number(10000000))
+                    .RuleFor(t => t.BarrierTypeId, f => f.Random.Number(10000000))
+                    .RuleFor(t => t.IsBarrier, f => f.PickRandom(true, false))
+                    .RuleFor(t => t.IsActive, f => f.PickRandom(true, false))
+                    .RuleFor(t => t.IsDeleted, f => f.PickRandom(true, false))
+                    .RuleFor(t => t.CreatedBy, f => f.Person.FullName)
+                    .RuleFor(t => t.CreatedDate, f => f.Date.Soon(5))
+                    .RuleFor(t => t.LastModifiedDate, f => f.Date.Soon(5))
+                    .RuleFor(t => t.LastModifiedBy, f => f.Person.FullName)
+                ;
+
+            var fakeModels = new List<Task>();
+            for (var i = 0; i < 500; i++)
+            {
+                var t = faker.Generate();
+                t.Id = i + 1;
+                fakeModels.Add(t);
+            }
+
+            AddRange(fakeModels);
+            SaveChanges();
+        }
+
+        private void SeedFakeTickets()
+        {
+            var faker = new Bogus.Faker<Ticket>()
+                    .RuleFor(t => t.TicketType, (f, u) => f.PickRandom("new", "open", "refused", "closed"))
+                    .RuleFor(t => t.Title, (f, u) => f.Lorem.Sentence())
+                    .RuleFor(t => t.Details, (f, u) => f.Lorem.Paragraph())
+                    .RuleFor(t => t.IsHtml, (f, u) => false)
+                    .RuleFor(t => t.TagList, (f, u) => string.Join(",", f.Commerce.Categories(3)))
+                    .RuleFor(t => t.CreatedDate, (f, u) => f.Date.Recent(100))
+                    .RuleFor(t => t.Owner, (f, u) => f.Person.FullName)
+                    .RuleFor(t => t.AssignedTo, (f, u) => f.Person.FullName)
+                    .RuleFor(t => t.TicketStatus, (f, u) => f.PickRandom(1, 2, 3))
+                    .RuleFor(t => t.LastUpdateBy, (f, u) => f.Person.FullName)
+                    .RuleFor(t => t.LastUpdateDate, (f, u) => f.Date.Soon(5))
+                    .RuleFor(t => t.Priority, (f, u) => f.PickRandom("low", "medium", "high", "critical"))
+                    .RuleFor(t => t.AffectedCustomer, (f, u) => f.PickRandom(true, false))
+                    .RuleFor(t => t.Version, (f, u) => f.PickRandom("1.0.0", "1.1.0", "2.0.0"))
+                    .RuleFor(t => t.ProjectId, (f, u) => f.Random.Number(100))
+                    .RuleFor(t => t.DueDate, (f, u) => f.Date.Soon(5))
+                    .RuleFor(t => t.EstimatedDuration, (f, u) => f.Random.Number(20))
+                    .RuleFor(t => t.ActualDuration, (f, u) => f.Random.Number(20))
+                    .RuleFor(t => t.TargetDate, (f, u) => f.Date.Soon(5))
+                    .RuleFor(t => t.ResolutionDate, (f, u) => f.Date.Soon(5))
+                    .RuleFor(t => t.Type, (f, u) => f.PickRandom(1, 2, 3))
+                    .RuleFor(t => t.ParentId, () => 0)
+                    .RuleFor(t => t.PreferredLanguage, (f, u) => f.PickRandom("fr", "en", "es"))
+                ;
+
+            var fakeModels = new List<Ticket>();
+            for (var i = 0; i < 500; i++)
+            {
+                var t = faker.Generate();
+                t.TicketId = i + 1;
+                fakeModels.Add(t);
+            }
+
+            AddRange(fakeModels);
             SaveChanges();
         }
 

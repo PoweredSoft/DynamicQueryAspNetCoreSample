@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using PoweredSoft.DynamicQuery;
 using PoweredSoft.DynamicQuery.Core;
 
@@ -34,6 +36,7 @@ namespace AcmeWeb
                 {
                     // this enables to receive any of our interface from a json deserialization coming from http in JSON.
                     var serviceProvider = services.BuildServiceProvider();
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.Converters.Add(new DynamicQueryJsonConverter(serviceProvider));
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

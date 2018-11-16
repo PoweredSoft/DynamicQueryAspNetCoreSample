@@ -1,136 +1,144 @@
 <main class="container" style="margin-top: 15px;">
 
-    <div class="d-flex">
-        <div class="align-self-center p-2 d-flex-shrink-1">Route: </div>
-        <div class="align-self-center p-2 w-100">
-            <select [(ngModel)]="route" class="form-control">
-                <option *ngFor="let r of routes" [value]="r">{{r}}</option>
-            </select>
-        </div>
-        <div class="align-self-center p-2 d-flex-shrink-1">
-            <button class="btn btn-primary" (click)="go()">Go</button>
-        </div>
+  <div class="d-flex">
+    <div class="align-self-center p-2 d-flex-shrink-1">Route: </div>
+    <div class="align-self-center p-2 w-100">
+      <select [(ngModel)]="route" class="form-control">
+        <option *ngFor="let r of routes" [value]="r">{{r}}</option>
+      </select>
     </div>
-
-    <hr>
-
-    <div class="row">
-        <div class="p-2 col-5 shadow-sm m-2 mb-5 bg-white rounded">
-
-            <h6>Paging</h6>
-            <div class="d-flex">
-                <div class="col align-self-center">Page</div>
-                <div class="col align-self-center"><input type="number" class="form-control" [(ngModel)]="criteria.page"></div>
-                <div class="col align-self-center">Page Size</div>
-                <div class="col align-self-center"><input type="number" class="form-control" [(ngModel)]="criteria.pageSize"></div>
-            </div>
-
-            <h6 class="mt-2">Sorting</h6>
-            <table class="table table-sm table-striped">
-                <thead>
-                    <tr>
-                        <th>Path</th>
-                        <th>Ascending</th>
-                        <th>
-                            <button class="btn btn-sm btn-primary" (click)="criteria.sorts.push({});">add</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let s of criteria.sorts">
-                        <td><input type="text" class="form-control" [(ngModel)]="s.path"></td>
-                        <td><input type="checkbox" [(ngModel)]="s.ascending"></td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" (click)="removeSort(s)">remove</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h6 class="mt-2">Filtering</h6>
-            <table class="table table-sm table-striped">
-                <thead>
-                    <tr>
-                        <th>Path</th>
-                        <th>Type</th>
-                        <th>Value</th>
-                        <th>And</th>
-                        <th>
-                            <button class="btn btn-sm btn-primary" (click)="criteria.filters.push({});">add</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let f of criteria.filters">
-                        <td><input type="text" class="form-control" [(ngModel)]="f.path"></td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="f.type">
-                                <option *ngFor="let ft of filterTypes" [value]="ft">{{ft}}</option>
-                            </select>
-                        </td>
-                        <td><input type="text" class="form-control" [(ngModel)]="f.value"></td>
-                        <td><input type="checkbox" [(ngModel)]="f.and"></td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" (click)="removeFilter(f)">remove</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h6 class="mt-2">Aggregate</h6>
-            <table class="table table-sm table-striped">
-                <thead>
-                    <tr>
-                        <th>Path</th>
-                        <th>Type</th>
-                        <th>
-                            <button class="btn btn-sm btn-primary" (click)="criteria.aggregates.push({});">add</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let a of criteria.aggregates">
-                        <td><input type="text" class="form-control" [(ngModel)]="a.path"></td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="a.type">
-                                <option *ngFor="let at of aggregateTypes" [value]="at">{{at}}</option>
-                            </select>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" (click)="removeAggregate(a)">remove</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h6 class="mt-2">Grouping</h6>
-            <table class="table table-sm table-striped">
-                <thead>
-                    <tr>
-                        <th>Path</th>
-                        <th>Ascending</th>
-                        <th>
-                            <button class="btn btn-sm btn-primary" (click)="criteria.groups.push({});">add</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let g of criteria.groups">
-                        <td><input type="text" class="form-control" [(ngModel)]="g.path"></td>
-                        <td><input type="checkbox" [(ngModel)]="g.ascending"></td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" (click)="removeGroup(g)">remove</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <label>Criteria: </label>
-            <pre>{{ criteria | json }}</pre>
-        </div>
-        <div class="p-2 col-6 shadow-sm m-2 mb-5 bg-white rounded">
-            <label>Last Result: </label>
-            <ngx-json-viewer [json]="lastResult" [expanded]="true"></ngx-json-viewer>
-        </div>
+    <div class="align-self-center p-2 d-flex-shrink-1">
+      <button class="btn btn-primary" (click)="go()">Go</button>
     </div>
+  </div>
+
+  <hr>
+
+  <div class="btn-group" *ngIf="route == 'api/tickets' || route == 'api/tasks'">
+    <button class="btn btn-primary" (click)="filteringSample()">Filtering Sample</button>
+    <button class="btn btn-primary" (click)="aggregateSample()">Aggregate Sample</button>
+    <button class="btn btn-primary" (click)="groupingSample()">Grouping Sample</button>
+  </div>
+
+  <hr *ngIf="route == 'api/tickets' || route == 'api/tasks'">
+
+  <div class="row">
+    <div class="p-2 col-5 shadow-sm m-2 mb-5 bg-white rounded">
+
+      <h6>Paging</h6>
+      <div class="d-flex">
+        <div class="col align-self-center">Page</div>
+        <div class="col align-self-center"><input type="number" class="form-control" [(ngModel)]="criteria.page"></div>
+        <div class="col align-self-center">Page Size</div>
+        <div class="col align-self-center"><input type="number" class="form-control" [(ngModel)]="criteria.pageSize"></div>
+      </div>
+
+      <h6 class="mt-2">Sorting</h6>
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Ascending</th>
+            <th>
+              <button class="btn btn-sm btn-primary" (click)="criteria.sorts.push({});">add</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of criteria.sorts">
+            <td><input type="text" class="form-control" [(ngModel)]="s.path"></td>
+            <td><input type="checkbox" [(ngModel)]="s.ascending"></td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="removeSort(s)">remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h6 class="mt-2">Filtering</h6>
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>And</th>
+            <th>
+              <button class="btn btn-sm btn-primary" (click)="criteria.filters.push({});">add</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of criteria.filters">
+            <td><input type="text" class="form-control" [(ngModel)]="f.path"></td>
+            <td>
+              <select class="form-control" [(ngModel)]="f.type">
+                <option *ngFor="let ft of filterTypes" [value]="ft">{{ft}}</option>
+              </select>
+            </td>
+            <td><input type="text" class="form-control" [(ngModel)]="f.value"></td>
+            <td><input type="checkbox" [(ngModel)]="f.and"></td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="removeFilter(f)">remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h6 class="mt-2">Aggregate</h6>
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Type</th>
+            <th>
+              <button class="btn btn-sm btn-primary" (click)="criteria.aggregates.push({});">add</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of criteria.aggregates">
+            <td><input type="text" class="form-control" [(ngModel)]="a.path"></td>
+            <td>
+              <select class="form-control" [(ngModel)]="a.type">
+                <option *ngFor="let at of aggregateTypes" [value]="at">{{at}}</option>
+              </select>
+            </td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="removeAggregate(a)">remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h6 class="mt-2">Grouping</h6>
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Ascending</th>
+            <th>
+              <button class="btn btn-sm btn-primary" (click)="criteria.groups.push({});">add</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let g of criteria.groups">
+            <td><input type="text" class="form-control" [(ngModel)]="g.path"></td>
+            <td><input type="checkbox" [(ngModel)]="g.ascending"></td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="removeGroup(g)">remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label>Criteria: </label>
+      <pre>{{ criteria | json }}</pre>
+    </div>
+    <div class="p-2 col-6 shadow-sm m-2 mb-5 bg-white rounded">
+      <label>Last Result: </label>
+      <ngx-json-viewer [json]="lastResult" [expanded]="false"></ngx-json-viewer>
+    </div>
+  </div>
 </main>
