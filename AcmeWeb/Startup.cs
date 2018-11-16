@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using PoweredSoft.DynamicQuery;
 using PoweredSoft.DynamicQuery.Core;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace AcmeWeb
 {
@@ -52,6 +53,11 @@ namespace AcmeWeb
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "API", Version = "v1" });
+            });
+
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "spa/dist";
@@ -82,8 +88,14 @@ namespace AcmeWeb
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-            app.UseMvc();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            });
+
+            app.UseMvc();
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
