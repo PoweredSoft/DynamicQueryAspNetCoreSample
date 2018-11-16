@@ -9,8 +9,7 @@ import { Subject } from "rxjs";
 })
 export class HomeComponent
 {
-   
-    criteria: IQueryCriteria = {
+    defaultCriteria: IQueryCriteria = {
         filters: [],
         sorts: [],
         groups: [],
@@ -18,6 +17,8 @@ export class HomeComponent
         pageSize: 20,
         page: 1
     };
+
+  criteria: IQueryCriteria;
 
     route: string = 'api/tickets';
     routes: string[] = ['api/orders', 'api/order-items', 'api/items', 'api/customers', 'api/tickets', 'api/tasks'];
@@ -51,8 +52,8 @@ export class HomeComponent
         'LastOrDefault'
     ];
 
-    constructor(private dynamicQueryService: DynamicQueryService) {
-  
+  constructor(private dynamicQueryService: DynamicQueryService) {
+    this.reset();
     }
 
     removeSort(sort: ISort) {
@@ -113,6 +114,15 @@ export class HomeComponent
     }
 
     this.go();
+  }
+
+  reset() {
+    this.lastResult = "press go to start";
+    this.criteria = { ... this.defaultCriteria };
+  }
+
+  routeChanged() {
+    this.reset();
   }
 
   groupingSample() {

@@ -3,7 +3,7 @@
   <div class="d-flex">
     <div class="align-self-center p-2 d-flex-shrink-1">Route: </div>
     <div class="align-self-center p-2 w-100">
-      <select [(ngModel)]="route" class="form-control">
+      <select [(ngModel)]="route" class="form-control" (change)="routeChanged()">
         <option *ngFor="let r of routes" [value]="r">{{r}}</option>
       </select>
     </div>
