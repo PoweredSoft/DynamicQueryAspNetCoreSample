@@ -29,15 +29,26 @@ namespace AcmeWeb
             });
 
             ConfigureDynamicQueryMappings(services);
+            services.AddTransient<IDynamicControllerResourceProvider, AcmeResourceProvider>();
+
+
+            var minimumDependencyServiceProvider = services.BuildServiceProvider();
 
             services
-                .AddMvc()
+                .AddMvc(o =>
+                {
+                    o.Conventions.Add(new DynamicControllerRouteConvention(minimumDependencyServiceProvider));
+                })
+                .ConfigureApplicationPartManager(m =>
+                {
+                    m.FeatureProviders.Add(new DynamicControllerFeatureProvider(minimumDependencyServiceProvider));
+                })
                 .AddJsonOptions(options =>
                 {
                     // this enables to receive any of our interface from a json deserialization coming from http in JSON.
-                    var serviceProvider = services.BuildServiceProvider();
+                    
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.Converters.Add(new DynamicQueryJsonConverter(serviceProvider));
+                    options.SerializerSettings.Converters.Add(new DynamicQueryJsonConverter(minimumDependencyServiceProvider));
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

@@ -1,20 +1,23 @@
 <main class="container" style="margin-top: 15px;">
 
-  <div class="d-flex">
+  <div class="row">
     <div class="align-self-center p-2 d-flex-shrink-1">Route: </div>
-    <div class="align-self-center p-2 w-100">
+    <div class="align-self-center p-2 w-50">
       <select [(ngModel)]="route" class="form-control" (change)="routeChanged()">
         <option *ngFor="let r of routes" [value]="r">{{r}}</option>
       </select>
     </div>
     <div class="align-self-center p-2 d-flex-shrink-1">
-      <button class="btn btn-primary" (click)="go()">Go</button>
+      <div class="btn-group">
+        <button class="btn btn-primary" (click)="get()">Get (for simple rest)</button>
+        <button class="btn btn-primary" (click)="read()">Read (advanced read criteria)</button>
+      </div>
     </div>
   </div>
 
   <hr>
 
-  <div class="btn-group" *ngIf="route == 'api/tickets'">
+  <div class="btn-group" *ngIf="route == 'api/ticket'">
     <button class="btn btn-primary" (click)="filteringSample()">Filtering Sample</button>
     <button class="btn btn-primary" (click)="aggregateSample()">Aggregate Sample</button>
     <button class="btn btn-primary" (click)="groupingSample()">Grouping Sample</button>
