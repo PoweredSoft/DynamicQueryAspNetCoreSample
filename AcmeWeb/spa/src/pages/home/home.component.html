@@ -14,13 +14,13 @@
 
   <hr>
 
-  <div class="btn-group" *ngIf="route == 'api/tickets' || route == 'api/tasks'">
+  <div class="btn-group" *ngIf="route == 'api/tickets'">
     <button class="btn btn-primary" (click)="filteringSample()">Filtering Sample</button>
     <button class="btn btn-primary" (click)="aggregateSample()">Aggregate Sample</button>
     <button class="btn btn-primary" (click)="groupingSample()">Grouping Sample</button>
   </div>
 
-  <hr *ngIf="route == 'api/tickets' || route == 'api/tasks'">
+  <hr *ngIf="route == 'api/tickets'">
 
   <div class="row">
     <div class="p-2 col-5 shadow-sm m-2 mb-5 bg-white rounded">

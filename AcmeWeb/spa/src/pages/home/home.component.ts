@@ -15,7 +15,7 @@ export class HomeComponent
         sorts: [],
         groups: [],
         aggregates: [],
-        pageSize: 2,
+        pageSize: 20,
         page: 1
     };
 
