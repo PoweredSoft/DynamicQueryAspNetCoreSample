@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using PoweredSoft.DynamicQuery;
+using PoweredSoft.DynamicQuery.AspNetCore;
 using PoweredSoft.DynamicQuery.Core;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -29,7 +30,8 @@ namespace AcmeWeb
                 options.UseInMemoryDatabase("AcmeWebSample");
             });
 
-            ConfigureDynamicQueryMappings(services);
+            services.AddDynamicQueryDefaultMappings();
+
             services.AddTransient<IDynamicControllerResourceProvider, AcmeResourceProvider>();
 
 
@@ -44,12 +46,11 @@ namespace AcmeWeb
                 {
                     m.FeatureProviders.Add(new DynamicControllerFeatureProvider(minimumDependencyServiceProvider));
                 })
+                .AddDynamicQueryJsonConverter(minimumDependencyServiceProvider)
                 .AddJsonOptions(options =>
                 {
                     // this enables to receive any of our interface from a json deserialization coming from http in JSON.
-                    
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.Converters.Add(new DynamicQueryJsonConverter(minimumDependencyServiceProvider));
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -62,18 +63,6 @@ namespace AcmeWeb
             {
                 configuration.RootPath = "spa/dist";
             });
-        }
-
-        private void ConfigureDynamicQueryMappings(IServiceCollection services)
-        {
-            // dynamic default bindings
-            services.AddTransient<ISort, Sort>();
-            services.AddTransient<IAggregate, Aggregate>();
-            services.AddTransient<ISimpleFilter, SimpleFilter>();
-            services.AddTransient<ICompositeFilter, CompositeFilter>();
-            services.AddTransient<IGroup, Group>();
-            services.AddTransient<IQueryCriteria, QueryCriteria>();
-            services.AddTransient<IQueryHandler, QueryHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
