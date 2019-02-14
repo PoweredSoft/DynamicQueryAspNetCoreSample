@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using PoweredSoft.Data.EntityFrameworkCore;
 using PoweredSoft.DynamicQuery;
 using PoweredSoft.DynamicQuery.AspNetCore;
 using PoweredSoft.DynamicQuery.Core;
@@ -30,10 +31,9 @@ namespace AcmeWeb
                 options.UseInMemoryDatabase("AcmeWebSample");
             });
 
-            services.AddDynamicQueryDefaultMappings();
+            services.AddPoweredSoftEntityFrameworkCoreDataServices();
 
             services.AddTransient<IDynamicControllerResourceProvider, AcmeResourceProvider>();
-
 
             var minimumDependencyServiceProvider = services.BuildServiceProvider();
 
@@ -42,15 +42,10 @@ namespace AcmeWeb
                 {
                     o.Conventions.Add(new DynamicControllerRouteConvention(minimumDependencyServiceProvider));
                 })
+                .AddPoweredSoftDynamicQuery()
                 .ConfigureApplicationPartManager(m =>
                 {
                     m.FeatureProviders.Add(new DynamicControllerFeatureProvider(minimumDependencyServiceProvider));
-                })
-                .AddDynamicQueryJsonConverter(minimumDependencyServiceProvider)
-                .AddJsonOptions(options =>
-                {
-                    // this enables to receive any of our interface from a json deserialization coming from http in JSON.
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
