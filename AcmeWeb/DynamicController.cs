@@ -12,7 +12,7 @@ namespace AcmeWeb
         where T : class
     {
         [Route("api/[controller]"), HttpGet]
-        public IQueryExecutionResult Get(
+        public IQueryExecutionResult<T> Get(
             [FromServices]AcmeContext context, 
             [FromServices]IQueryHandler handler, 
             [FromServices]IQueryCriteria criteria,
@@ -27,7 +27,7 @@ namespace AcmeWeb
         }
 
         [Route("api/[controller]/read"), HttpPost]
-        public IQueryExecutionResult Read(
+        public IQueryExecutionResult<T> Read(
             [FromServices]AcmeContext context,
             [FromServices]IQueryHandler handler,
             [FromBody]IQueryCriteria criteria)
