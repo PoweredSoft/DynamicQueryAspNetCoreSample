@@ -87,7 +87,7 @@ namespace AcmeWeb
                 spa.Options.SourcePath = "spa";
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200"); //(npmScript: "start");
                 }
             });
         }
