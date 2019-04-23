@@ -37,6 +37,8 @@ namespace AcmeWeb
 
             var minimumDependencyServiceProvider = services.BuildServiceProvider();
 
+            services.AddCors();
+
             services
                 .AddMvc(o =>
                 {
@@ -79,6 +81,7 @@ namespace AcmeWeb
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             });
 
+            app.UseCors(t => t.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseMvc();
             app.UseSpa(spa =>
             {
