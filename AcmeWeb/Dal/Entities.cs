@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -298,7 +300,6 @@ namespace AcmeWeb.Dal
             for (var i = 0; i < 500; i++)
             {
                 var t = faker.Generate();
-                t.TicketId = i + 1;
                 fakeModels.Add(t);
             }
 
@@ -308,8 +309,10 @@ namespace AcmeWeb.Dal
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
 
+            modelBuilder.Entity<Ticket>()
+                .Property(p => p.TicketId)
+                .ValueGeneratedOnAdd();
         }
     }
 }
