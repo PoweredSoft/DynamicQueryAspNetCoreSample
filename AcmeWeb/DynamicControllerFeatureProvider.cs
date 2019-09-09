@@ -20,10 +20,10 @@ namespace AcmeWeb
             var resourceProviders = this.serviceProvider.GetServices<IDynamicControllerResourceProvider>();
             foreach (var rp in resourceProviders)
             {
-                var dynamicController = typeof(DynamicController<>);
+                var dynamicController = typeof(DynamicController<,>);
                 rp.GetResources().ForEach(resourceType =>
                 {
-                    var genericController = dynamicController.MakeGenericType(resourceType);
+                    var genericController = dynamicController.MakeGenericType(resourceType.modelType, resourceType.keyType);
                     var typeInfo = genericController.GetTypeInfo();
                     feature.Controllers.Add(typeInfo);
                 });

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AcmeWeb
 {
     [Route("api/[controller]"), ApiController]
-    public class DynamicController<T> : Controller
+    public class DynamicController<T, TKey> : Controller
         where T : class
     {
         [HttpGet]
@@ -47,7 +47,7 @@ namespace AcmeWeb
         }
 
         [HttpPut("{id}")]
-        public T Update([FromServices]AcmeContext context, [FromRoute]object id, [FromBody]T model)
+        public T Update([FromServices]AcmeContext context, [FromRoute]TKey id, [FromBody]T model)
         {
             context.Set<T>().Update(model);
             context.SaveChanges();
@@ -55,7 +55,7 @@ namespace AcmeWeb
         }
 
         [HttpDelete("{id}")]
-        public void Delete([FromServices]AcmeContext context, [FromRoute]object id)
+        public void Delete([FromServices]AcmeContext context, [FromRoute]TKey id)
         {
             var model = context.Set<T>().Find(id);
             context.Set<T>().Remove(model);

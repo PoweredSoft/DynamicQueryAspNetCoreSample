@@ -7,20 +7,20 @@ namespace AcmeWeb
 {
     public interface IDynamicControllerResourceProvider
     {
-        List<Type> GetResources();
+        List<(Type modelType, Type keyType)> GetResources();
     }
 
     public class AcmeResourceProvider : IDynamicControllerResourceProvider
     {
-        public List<Type> GetResources()
+        public List<(Type modelType, Type keyType)> GetResources()
         {
-            return new List<Type> {
-                typeof(Dal.Ticket),
-                typeof(Dal.Customer),
-                typeof(Dal.Item),
-                typeof(Dal.Order),
-                typeof(Dal.Task),
-                typeof(Dal.OrderItem)
+            return new List<(Type modelType, Type keyType)> {
+                (typeof(Dal.Ticket), typeof(long)),
+                (typeof(Dal.Customer), typeof(long)),
+                (typeof(Dal.Item), typeof(long)),
+                (typeof(Dal.Order), typeof(long)),
+                (typeof(Dal.Task), typeof(long)),
+                (typeof(Dal.OrderItem), typeof(long)),
             };
         }
     }

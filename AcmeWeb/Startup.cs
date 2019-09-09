@@ -103,7 +103,7 @@ namespace AcmeWeb
             {
                 using (var context = serviceScope.ServiceProvider.GetService<AcmeContext>())
                 {
-                    context.Seed();
+                    context.Database.EnsureCreated();
                 }
             }
         }
