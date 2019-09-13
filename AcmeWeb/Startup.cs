@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AcmeWeb.Dal;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +41,8 @@ namespace AcmeWeb
 
             services.AddCors();
 
+            services.AddTransient<IValidator<Customer>, CustomerValidator>(); 
+
             services
                 .AddMvc(o =>
                 {
@@ -49,7 +53,8 @@ namespace AcmeWeb
                 {
                     m.FeatureProviders.Add(new DynamicControllerFeatureProvider(minimumDependencyServiceProvider));
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddFluentValidation();
 
             services.AddSwaggerGen(c =>
             {

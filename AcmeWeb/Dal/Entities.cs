@@ -182,8 +182,6 @@ namespace AcmeWeb.Dal
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            
             modelBuilder.Entity<Customer>().Property(t => t.Id).HasValueGenerator<MaxPlusOneValueGenerator<Customer>>();
             modelBuilder.Entity<Item>().Property(t => t.Id).HasValueGenerator<MaxPlusOneValueGenerator<Item>>();
             modelBuilder.Entity<Order>().Property(t => t.Id).HasValueGenerator<MaxPlusOneValueGenerator<Order>>();
