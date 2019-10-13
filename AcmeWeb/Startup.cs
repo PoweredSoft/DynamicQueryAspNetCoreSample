@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using PoweredSoft.Data.EntityFrameworkCore;
@@ -19,6 +19,7 @@ using PoweredSoft.DynamicQuery;
 using PoweredSoft.DynamicQuery.AspNetCore;
 using PoweredSoft.DynamicQuery.Core;
 using Swashbuckle.AspNetCore.Swagger;
+using PoweredSoft.DynamicQuery.AspNetCore.NewtonsoftJson;
 
 namespace AcmeWeb
 {
@@ -48,17 +49,17 @@ namespace AcmeWeb
                 {
                     o.Conventions.Add(new DynamicControllerRouteConvention(minimumDependencyServiceProvider));
                 })
-                .AddPoweredSoftDynamicQuery()
+                .AddPoweredSoftJsonNetDynamicQuery()
                 .ConfigureApplicationPartManager(m =>
                 {
                     m.FeatureProviders.Add(new DynamicControllerFeatureProvider(minimumDependencyServiceProvider));
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddFluentValidation();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
 
             services.AddSpaStaticFiles(configuration =>
@@ -68,9 +69,9 @@ namespace AcmeWeb
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -86,14 +87,20 @@ namespace AcmeWeb
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             });
 
-            app.UseCors(t => t.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
-            app.UseMvc();
+            app.UseCors(t => t.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            app.UseRouting(); 
+            
+            app.UseEndpoints(o =>
+            {
+                o.MapControllers();
+            });
+            
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
                 spa.Options.SourcePath = "spa";
-                if (env.IsDevelopment())
+                if (env.EnvironmentName == "Development")
                 {
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200"); //(npmScript: "start");
                 }
